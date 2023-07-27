@@ -1,1 +1,17 @@
-
+spring:
+  datasource:
+    url: jdbc:postgresql://${TASK_SERVICE_DB_HOST}:${TASK_SERVICE_DB_PORT}/${TASK_SERVICE_DB_NAME}?currentSchema=${TASK_SERVICE_DB_SCHEMA}
+    username: ${TASK_SERVICE_DB_USERNAME}
+    password: ${TASK_SERVICE_DB_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        default_schema: ${TASK_SERVICE_DB_SCHEMA}
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    default-schema: ${TASK_SERVICE_DB_SCHEMA}
+    liquibase-schema: ${TASK_SERVICE_DB_SCHEMA}
+    enabled: true
+    change-log: classpath:/db/changelog/changelog-master.xml
