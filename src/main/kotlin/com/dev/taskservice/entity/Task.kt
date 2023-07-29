@@ -26,7 +26,8 @@ class Task(
     @Column(name = "create_date") var createDate: Date?,
     @Column(name = "update_date") var updateDate: Date?,
     @ManyToOne
-    @JoinColumn(name = "user_id") var user: User?
+    @JoinColumn(name = "user_id") var user: User?,
+    @Column(name = "is_deleted") var isDeleted: Boolean?
 ) {
 
 
