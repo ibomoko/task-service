@@ -9,5 +9,4 @@ class TaskServiceApplication
 
 fun main(args: Array<String>) {
     runApplication<TaskServiceApplication>(*args)
-    var idGenerator = IdGenerator.generate()
 }
