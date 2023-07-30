@@ -11,14 +11,15 @@ import java.util.*
 class JWTProvider(private val securityConstants: SecurityConstants) {
 
     private val jwtVerifier: JWTVerifier = JWT
-        .require(Algorithm.HMAC512(securityConstants.jwtSecret))
+        .require(Algorithm.HMAC256(securityConstants.jwtSecret))
         .withSubject(securityConstants.jwtSubject)
         .withIssuer(securityConstants.jwtIssuer)
         .build()
 
     fun generateToken(email: String): String {
         return JWT.create()
-            .withSubject(email)
+            .withSubject(securityConstants.jwtSubject)
+            .withClaim("email", email)
             .withIssuedAt(Date())
             .withExpiresAt(getExpireDate())
             .withIssuer(securityConstants.jwtIssuer)
@@ -27,7 +28,7 @@ class JWTProvider(private val securityConstants: SecurityConstants) {
 
     fun extractEmail(token: String): String {
         val decodedJWT = jwtVerifier.verify(token)
-        return decodedJWT.subject
+        return decodedJWT.getClaim("email").asString()
     }
 
     fun isNotExpired(token: String): Boolean {

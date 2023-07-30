@@ -6,5 +6,5 @@ import javax.validation.constraints.NotEmpty
 
 data class TaskCreateRequest(@NotEmpty(message = "Title is required") val title: String,
                              @NotEmpty(message = "Description is required") val description: String,
-                             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy") val dueDate: Date?,
+                             val dueDate: Date?,
                              @NotEmpty(message = "User email is required") val userEmail: String)
