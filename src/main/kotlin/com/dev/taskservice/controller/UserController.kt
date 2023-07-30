@@ -1,7 +1,9 @@
 package com.dev.taskservice.controller
 
-import com.dev.taskservice.model.request.user.UserCreateRequest
-import com.dev.taskservice.model.response.user.UserCreateResponse
+import com.dev.taskservice.model.request.user.UserSignUpRequest
+import com.dev.taskservice.model.request.user.UserSignInRequest
+import com.dev.taskservice.model.response.user.UserSignUpResponse
+import com.dev.taskservice.model.response.user.UserSignInResponse
 import com.dev.taskservice.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -14,9 +16,14 @@ import javax.validation.Valid
 @RequestMapping("v1/api/users")
 class UserController(val userService: UserService) {
 
-    @PostMapping
-    fun createUser(@RequestBody @Valid userCreateRequest: UserCreateRequest): ResponseEntity<UserCreateResponse> {
-        return ResponseEntity.ok(userService.createUser(userCreateRequest))
+    @PostMapping("/signup")
+    fun signUp(@RequestBody @Valid userSignUpRequest: UserSignUpRequest): ResponseEntity<UserSignUpResponse> {
+        return ResponseEntity.ok(userService.signUp(userSignUpRequest))
+    }
+
+    @PostMapping("/signin")
+    fun signIn(@RequestBody @Valid userSignInRequest: UserSignInRequest): ResponseEntity<UserSignInResponse> {
+        return ResponseEntity.ok(userService.signIn(userSignInRequest))
     }
 
 

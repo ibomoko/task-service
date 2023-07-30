@@ -4,31 +4,25 @@ import com.dev.taskservice.entity.Role
 import com.dev.taskservice.entity.User
 import com.dev.taskservice.enum.RoleType
 import com.dev.taskservice.error.exception.InvalidArgumentException
-import com.dev.taskservice.model.request.user.UserCreateRequest
+import com.dev.taskservice.model.request.user.UserSignUpRequest
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import java.util.*
 import java.util.function.Function
 
 @Component
-class UserEntityConverter : Function<UserCreateRequest, User> {
-    override fun apply(request: UserCreateRequest): User {
-        validateRequestRoles(request.roles)
+class UserEntityConverter(val passwordEncoder: PasswordEncoder) : Function<UserSignUpRequest, User> {
+    override fun apply(request: UserSignUpRequest): User {
 
         return User(
             null,
             request.fullname,
-            request.password,
+            passwordEncoder.encode(request.password),
             request.email,
-            request.roles.map { roleName -> Role(null, roleName) }.toSet(),
+            setOf(Role(null, RoleType.USER.name)),
             Date(),
             false
         )
     }
 
-    private fun validateRequestRoles(roles: List<String>): Unit {
-        val roleTypes: List<String> = RoleType.values().map { it.name }
-
-        val invalidRoles = roles.filter { it !in roleTypes }
-        if (invalidRoles.isNotEmpty()) throw InvalidArgumentException("Roles are invalid.")
-    }
 }
