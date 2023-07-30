@@ -15,3 +15,28 @@ spring:
     liquibase-schema: ${TASK_SERVICE_DB_SCHEMA}
     enabled: true
     change-log: classpath:/db/changelog/changelog-master.xml
+
+security:
+  jwt-secret: ${TASK_SERVICE_JWT_SECRET}
+  jwt-issuer: ${TASK_SERVICE_JWT_ISSUER}
+  jwt-subject: ${TASK_SERVICE_JWT_SUBJECT}
+  auth:
+    whitelist: >
+      /swagger-resources,
+      /swagger-resources/**,
+      /configuration/ui,
+      /configuration/security,
+      /swagger-ui.html,
+      /swagger-ui/index.html,
+      /webjars/**,
+      /api/public/**,
+      /v3/api-docs/**,
+      /v3/api-docs,
+      /swagger-ui/**,
+      /v2/api-docs,
+      /api/v1/public/**,
+      /ws-registration/**,
+      /v1/api/users/signin,
+      /v1/api/users/signup
+
+base-url: ${TASK_SERVICE_BASE_URL}
