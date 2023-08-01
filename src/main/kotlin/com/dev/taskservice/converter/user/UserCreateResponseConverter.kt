@@ -13,8 +13,7 @@ class UserCreateResponseConverter : Function<User, UserSignUpResponse> {
             user.fullname!!,
             user.email!!,
             user.createDate!!,
-            user.roles?.map { role -> role.name!! }!!.toList(),
-            user.isDeleted!!
+            user.roles?.map { role -> role.name!! }!!.toList()
         )
     }
 }

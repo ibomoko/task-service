@@ -3,9 +3,9 @@ package com.dev.taskservice.service.impl
 import com.dev.taskservice.converter.task.TaskCreateResponseConverter
 import com.dev.taskservice.converter.task.TaskEntityConverter
 import com.dev.taskservice.converter.task.TaskResponseConverter
-import com.dev.taskservice.entity.Task
 import com.dev.taskservice.error.exception.ResourceAlreadyExistsException
 import com.dev.taskservice.error.exception.ResourceNotFoundException
+import com.dev.taskservice.error.exception.TaskAlreadyCompletedException
 import com.dev.taskservice.model.request.task.TaskCreateRequest
 import com.dev.taskservice.model.request.task.TaskFilter
 import com.dev.taskservice.model.response.task.TaskCreateResponse
@@ -17,6 +17,8 @@ import com.dev.taskservice.specification.TaskSpecification
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.security.Principal
+import javax.annotation.Resource
 
 @Service
 class TaskServiceImpl(val taskRepository: TaskRepository,
@@ -24,12 +26,12 @@ class TaskServiceImpl(val taskRepository: TaskRepository,
                       val taskEntityConverter: TaskEntityConverter,
                       val taskCreateResponseConverter: TaskCreateResponseConverter,
                       val taskResponseConverter: TaskResponseConverter) : TaskService {
-    override fun createTask(taskCreateRequest: TaskCreateRequest): TaskCreateResponse {
+    override fun createTask(taskCreateRequest: TaskCreateRequest, principal: Principal): TaskCreateResponse {
         taskRepository.findByTitle(taskCreateRequest.title)
-            ?.run { throw ResourceAlreadyExistsException("Task already exists with '${taskCreateRequest.title}' title ") }
+                ?.run { throw ResourceAlreadyExistsException("Task already exists with '${taskCreateRequest.title}' title ") }
 
         var task = taskEntityConverter.apply(taskCreateRequest)
-        val user = userRepository.findByEmail(taskCreateRequest.userEmail) ?: throw ResourceNotFoundException("User not found with '${taskCreateRequest.userEmail}' email")
+        val user = userRepository.findByEmail(principal.name) ?: throw ResourceNotFoundException("User not found with '${principal.name}' email")
 
         task.user = user
         task = taskRepository.save(task)
@@ -42,6 +44,23 @@ class TaskServiceImpl(val taskRepository: TaskRepository,
         val taskPage = taskRepository.findAll(taskSpecification, pageable)
 
         return taskPage.map { task -> taskResponseConverter.apply(task) }
+    }
+
+    override fun getTaskPage(pageable: Pageable, principal: Principal): Page<TaskResponse> {
+        val user  = userRepository.findByEmail(principal.name)
+
+        return taskRepository.findAllByUserId(user?.id!!, pageable)
+            .map { taskResponseConverter.apply(it) }
+    }
+
+    override fun completeTask(id: String) {
+        val task = taskRepository.findById(id)
+            .orElseThrow { ResourceNotFoundException("Task not found with this id") }
+
+        if (task.isCompleted == true) throw TaskAlreadyCompletedException("Task already completed with this id: '$id'")
+
+        task.isCompleted = true
+        taskRepository.save(task)
     }
 
 }
