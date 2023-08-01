@@ -8,6 +8,5 @@ data class UserSignUpResponse(
     val fullname: String,
     val email: String,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss") val createDate: Date,
-    val roles: List<String>,
-    val isDeleted: Boolean
+    val roles: List<String>
 )

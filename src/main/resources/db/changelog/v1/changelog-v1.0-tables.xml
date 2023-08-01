@@ -59,10 +59,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="2023-07-29-add_is_deleted_column_to_users_and_tasks_tables" author="Ahmadov Ibrahim">
-        <addColumn tableName="users">
-            <column name="is_deleted" type="boolean"/>
-        </addColumn>
+    <changeSet id="2023-07-29-add_is_deleted_column_to_tasks_table" author="Ahmadov Ibrahim">
         <addColumn tableName="tasks">
             <column name="is_deleted" type="boolean"/>
         </addColumn>

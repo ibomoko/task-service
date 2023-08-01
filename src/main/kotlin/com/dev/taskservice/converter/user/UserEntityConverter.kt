@@ -8,20 +8,20 @@ import com.dev.taskservice.model.request.user.UserSignUpRequest
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import java.util.*
+import java.util.function.BiFunction
 import java.util.function.Function
 
 @Component
-class UserEntityConverter(val passwordEncoder: PasswordEncoder) : Function<UserSignUpRequest, User> {
-    override fun apply(request: UserSignUpRequest): User {
+class UserEntityConverter(val passwordEncoder: PasswordEncoder) : BiFunction<UserSignUpRequest, Role, User> {
+    override fun apply(request: UserSignUpRequest, role: Role): User {
 
         return User(
             null,
             request.fullname,
             passwordEncoder.encode(request.password),
             request.email,
-            setOf(Role(null, RoleType.USER.name)),
-            Date(),
-            false
+            setOf(role),
+            Date()
         )
     }
 

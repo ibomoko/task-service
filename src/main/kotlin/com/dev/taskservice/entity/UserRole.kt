@@ -18,7 +18,7 @@ class UserRole(
     @JoinColumn(name = "user_id")
     val user: User?,
     @Column(name = "user_id", updatable = false, insertable = false)
-    val userID: String?
+    val userId: String?
 ) {
 
 }

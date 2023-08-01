@@ -23,7 +23,6 @@ class User(
         inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")]
     )
     var roles: Set<Role>?,
-    @Column(name = "create_date") var createDate: Date?,
-    @Column(name = "is_deleted") var isDeleted: Boolean?
+    @Column(name = "create_date") var createDate: Date?
 ) {
 }
